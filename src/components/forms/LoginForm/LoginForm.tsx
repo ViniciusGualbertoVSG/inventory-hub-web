@@ -1,0 +1,88 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+import { useRouter }           from "next/navigation";
+import { login, setAuthToken} from "@/lib/api";
+import Cookies                 from "js-cookie";
+import { useAuthStore } from "@/store/auth-store";
+import Link from "next/link";
+
+export function LoginForm() {
+  const router                    = useRouter();
+  const { setUser } = useAuthStore.getState();
+  const [email, setEmail]         = useState('');
+  const [password, setPassword]   = useState('');
+  const [error, setError]         = useState<string | null>(null);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setError('');
+
+    try{
+      const loginData = await login(email, password);
+      console.log("Login bem-sucedido:", loginData);
+
+      setAuthToken(loginData.accessToken);
+      Cookies.set('auth_token', loginData.accessToken, {expires: 2});
+
+      setUser(loginData.user);
+
+      router.push('/select-company');
+
+    }catch(error){
+      setError("Falha no Login. Verifique suas credenciais.");
+      console.error("Falha no Login:", error);
+    }
+  }
+
+  return (
+    <div className="w-full h-screen max-w-sm space-y-4 flex flex-col justify-center mx-auto">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold">Entrar</h1>
+        <p className="text-muted-foreground">
+          Use seu email e senha para acessar o painel.
+        </p>
+      </div>
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="flex flex-col space-y-2">
+          <label htmlFor="email" className="text-sm font-medium">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            className="rounded-md border border-white/10 bg-muted p-2"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col space-y-2">
+          <label htmlFor="password" className="text-sm font-medium">Senha</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            className="rounded-md border border-white/10 bg-muted p-2"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full rounded-md bg-primary p-2 font-semibold text-primary-foreground hover:bg-primary/90"
+        >
+          Entrar
+        </button>
+      </form>
+      <Link href="/register" 
+        className="text-center items-center gap-2 rounded-md p-2 text-muted-foreground hover:bg-white/20 hover:text-foreground"
+      >
+        <span>Cadastre-se</span>
+      </Link>
+      {error && (
+        <p className="text-center text-sm text-red-500">{error}</p>
+      )}
+    </div>
+  )
+}
