@@ -1,0 +1,68 @@
+.
+├── .env.local                 # Armazena segredos (chaves de API, URL do backend, JWT_SECRET)
+├── .gitignore                 # Lista de arquivos/pastas ignorados pelo Git (ex: node_modules)
+├── next.config.mjs            # Arquivo de configuração principal do Next.js
+├── package.json               # Gerencia as dependências e scripts do projeto
+├── postcss.config.mjs         # Configura o PostCSS (necessário para o Tailwind v4)
+├── tsconfig.json              # Configura o compilador do TypeScript
+└── src/
+    ├── app/                   # Diretório principal do App Router, onde as rotas são definidas
+    │   ├── (auth)/              # Grupo de Rotas para páginas de autenticação (não afeta a URL)
+    │   │   ├── login/           # Rota para a URL: /login
+    │   │   │   └── page.tsx     # A UI (componente) da página de login
+    │   │   ├── register/        # Rota para a URL: /register
+    │   │   │   └── page.tsx     # A UI da página de registro
+    │   │   └── layout.tsx       # Layout compartilhado pelas páginas de (auth) (ex: centraliza o formulário)
+    │   │
+    │   ├── (dashboard)/         # Grupo de Rotas para a área logada principal (não afeta a URL)
+    │   │   ├── layout.tsx       # Layout principal (com Sidebar/Header) e "Hidratador" do F5
+    │   │   ├── dashboard/       # Pasta que cria o prefixo de URL /dashboard
+    │   │   │   ├── page.tsx     # Página principal do dashboard (URL: /dashboard)
+    │   │   │   ├── inventory/   # Rota para a URL: /dashboard/inventory
+    │   │   │   │   └── page.tsx # Página de listagem de produtos e categorias
+    │   │   │   ├── members/     # Rota para a URL: /dashboard/members
+    │   │   │   │   └── page.tsx # Página de gerenciamento de membros
+    │   │   │   └── settings/    # Rota para a URL: /dashboard/settings
+    │   │   │       └── page.tsx # Página de configurações da empresa
+    │   │
+    │   ├── select-company/      # [NOVO] Rota para a URL: /select-company
+    │   │   └── page.tsx         # [NOVO] UI para o usuário selecionar a empresa ativa
+    │   │
+    │   ├── globals.css          # Estilos globais e variáveis de CSS (tema do Tailwind v4)
+    │   ├── layout.tsx           # O Layout Raiz, contém <html> e <body>
+    │   └── page.tsx             # A página inicial pública do site (URL: /)
+    │
+    ├── components/              # Pasta para todos os nossos componentes React reutilizáveis
+    │   ├── ui/                  # Componentes "primitivos" (Button, Input, Card), focados em aparência
+    │   │   └── Button/
+    │   │       ├── Button.tsx   # A definição do componente Button
+    │   │       └── index.ts     # Arquivo para exportação limpa
+    │   │
+    │   ├── forms/               # Componentes de formulário complexos
+    │   │   └── LoginForm/
+    │   │       ├── LoginForm.tsx# Definição do componente (lógica de estado e envio)
+    │   │       └── index.ts     # Arquivo para exportação limpa
+    │   │
+    │   └── layout/              # Componentes de estrutura da página
+    │       ├── Header/
+    │       │   ├── Header.tsx   # Definição do cabeçalho (lê o 'store' para exibir o nome)
+    │       │   └── index.ts     # Exportador limpo
+    │       └── Sidebar/
+    │           ├── Sidebar.tsx  # Definição da barra lateral (com os <Link> de navegação)
+    │           └── index.ts     # Exportador limpo
+    │
+    ├── lib/                     # "Bibliotecas" de código, lógica não-visual
+    │   ├── api.ts               # Local central para toda a lógica de comunicação com o backend (axios)
+    │   └── utils.ts             # Funções utilitárias genéricas
+    │
+    ├── hooks/                   # Para "Custom Hooks" do React (lógica de estado reutilizável)
+    │   └── (vazio por enquanto)
+    │
+    ├── store/                   # Gerenciamento de estado global (Zustand) - o "cérebro"
+    │   └── auth-store.ts        # Store para guardar 'user', 'companies', e 'selectedCompany'
+    │
+    ├── types/                   # Definições de tipos e interfaces do TypeScript
+    │   ├── auth.ts              # Tipos para User, Company, LoginResponse, GetMeResponse
+    │   └── inventory.ts         # Tipos para Produto, Categoria (quando criarmos)
+    │
+    └── middleware.ts            # (Na raiz do src/) Protege nossas rotas (valida o cookie JWT)
