@@ -115,6 +115,8 @@ Endpoints do backend em NestJS utilizados por este frontend:
 | Convites | `POST`, `GET`, `DELETE` em `/:companyId/invites` · `POST /join` |
 | Membros | `PATCH` e `DELETE` em `/:companyId/members/:memberId` |
 
+A coleção completa está em [`docs/insomnia-collection.yaml`](docs/insomnia-collection.yaml) — importe no Insomnia, rode `POST /auth/login` e cole o `accessToken` na variável `authToken` do Base Environment. Tokens e senhas foram substituídos por variáveis.
+
 ## Como rodar
 
 **Pré-requisitos:** Node.js e o [backend](https://github.com/viniciusBarbacovi/learning-nestjs) em execução.
